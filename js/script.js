@@ -66,7 +66,7 @@ if (!Array.prototype.find) {
 	};
 }
 /**
- * Array.prototype.find() polyfill
+ * Array.prototype.findIndex() polyfill
  * Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
  */
 if (!Array.prototype.findIndex) {
@@ -250,11 +250,17 @@ var getParams = function (url) {
 		template: function (props) {
 			var content = '';
 			content +=
-				'<form id="add-todo">' +
-					'<input type="text" name="add">' +
-					'<button type="submit">Add</button>' +
-				'</form>' +
-				'<ul id="todo-list"></ul>';
+				'<div class="todo-actions">' +
+					'<div class="container">' +
+						'<form id="add-todo">' +
+							'<input type="text" name="add" placeholder="Type a new todo">' +
+							'<button type="submit" class="button">Add</button>' +
+						'</form>' +
+					'</div>' +
+				'</div>' +
+				'<div class="container">' +
+					'<ul id="todo-list" class="todo-list"></ul>' +
+				'</div>';
 
 			return content;
 		},
@@ -269,10 +275,14 @@ var getParams = function (url) {
 
 			var content = '';
 			content +=
-				'<form id="edit-todo">' +
-					'<input type="text" id="new-todo" name="edit" value="' + props.todo.title + '">' +
-					'<button type="submit">Save</button>' +
-				'</form>';
+				'<div class="todo-actions">' +
+					'<div class="container">' +
+						'<form id="edit-todo">' +
+							'<input type="text" id="new-todo" name="edit" value="' + props.todo.title + '">' +
+							'<button type="submit" class="button">Save</button>' +
+						'</form>' +
+					'</div>' +
+				'</div>';
 
 			return content;
 		},
@@ -285,14 +295,20 @@ var getParams = function (url) {
 		template: function (props) {
 			var content = '';
 
+			if (props.todos.length < 1) {
+				return '<li class="todo-none">Your todo list is empty. Hurray! 🥂</li>';
+			}
+
 			props.todos.forEach(function (todo) {
 				var todoClasses = todo.completed ? 'todo-item completed' : 'todo-item';
 				var checked = todo.completed ? 'checked="true"' : '';
 				content +=
 					'<li id="' + todo.id + '" class="' + todoClasses + '">' +
 						'<label class="todo-text"><input type="checkbox" class="toggle-todo" ' + checked + '>' + todo.title + '</label>' +
-						'<a class="button" href="/edit/?id=' + todo.id + '">Edit</a>' +
-						'<button id="delete-todo" class="button">Delete</button>' +
+						'<div class="button-group">' +
+							'<a class="button button-text button-edit" href="/edit/?id=' + todo.id + '">Edit</a>' +
+							'<button id="delete-todo" class="button button-text button-delete">Delete</button>' +
+						'<div>' +
 					'</li>';
 			});
 
